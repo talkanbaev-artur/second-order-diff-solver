@@ -2,12 +2,17 @@ package logic
 
 import (
 	"context"
+	"errors"
 
+	"github.com/talkanbaev-artur/auca-numericals-template/src/backend/logic/functions"
 	"github.com/talkanbaev-artur/auca-numericals-template/src/backend/logic/model"
 )
 
 type APIService interface {
 	GetNumericals(ctx context.Context) []model.Numericals
+	GetAvailableTasks(ctx context.Context) ([]model.Task, error)
+	GetRealSolution(ctx context.Context, taskName string, eps float64) (model.SolutionData, error)
+	Calculate2ODE(ctx context.Context, inp model.Boundary2ndODEInputs) (model.NumericalSolution, error)
 }
 
 func NewAPIService() APIService {
@@ -23,4 +28,17 @@ func (s service) GetNumericals(ctx context.Context) []model.Numericals {
 	}
 
 	return nums
+}
+
+func (service) GetAvailableTasks(ctx context.Context) ([]model.Task, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (service) GetRealSolution(ctx context.Context, taskName string, eps float64) (model.SolutionData, error) {
+	sol := functions.Evaluate(taskName, eps)
+	return sol, nil
+}
+
+func (service) Calculate2ODE(ctx context.Context, inp model.Boundary2ndODEInputs) (model.NumericalSolution, error) {
+	return model.NumericalSolution{}, errors.New("not implemented")
 }
