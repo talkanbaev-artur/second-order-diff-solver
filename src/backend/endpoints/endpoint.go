@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"context"
+	"errors"
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/log"
@@ -58,6 +59,9 @@ type GetNumericalSolutionRequest struct {
 func MakeGetNumericalSolutionEndpoint(s logic.APIService, lg log.Logger) endpoint.Endpoint {
 	e := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(GetNumericalSolutionRequest)
+		if req.GridSize == 0 {
+			return nil, errors.New("zero grid size")
+		}
 		data, err := s.Calculate2ODE(ctx, model.Boundary2ndODEInputs{GridSize: req.GridSize,
 			EpsilonParam: req.EpsilonValue, DifferenceScheme: req.Scheme, TaskName: req.Task})
 		return data, err
