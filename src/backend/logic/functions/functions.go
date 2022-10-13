@@ -77,21 +77,20 @@ var problemSolutions = map[string]model.EPSRF{
 			eps2 := 12 * eps * eps
 			c1 := x2*x2 + 4*x3*eps + eps2*x2 - x*eVal*(x3+4*x2*eps+x*eps2+eps3)
 			c3 := eps3 + eps2 + 4*eps + 5
-			return (1 / (4 * (eVal - 1))) * (c1 + x*eps3 + c3*math.Pow(math.E, x/eps) - c3)
+			return (1 / (4 * (eVal - 1))) * (c1 + x*eps3 + c3*(math.Pow(math.E, x/eps)-1))
 		}
 	},
 	"2": func(eps float64) model.RF {
 		return func(x float64) float64 {
 			eVal := math.Pow(math.E, 1/eps)
-
 			eps1 := 4 * eps
 			eps2 := 12 * eps * eps
 			eps3 := 24 * eps * eps * eps
 			x2 := x * x
 			x3 := x * x2
 			c1 := x2*x2 + eps1*x3 + eps2*x2 - 2*x*eVal*(x3+x2*eps1+x*eps2+eps3)
-			c3 := eps3*eps + 2*eps3 + 2*eps2 + 2*eps + 5
-			return (1 / (8 * (eVal - 4))) * (c1 + x*eps3 + c3*math.Pow(math.E, x/eps) - c3)
+			c3 := eps3*eps + 2*eps3 + 2*eps2 + 2*eps1 + 5
+			return (1 / (8*eVal - 4)) * (c1 + x*eps3 + c3*(math.Pow(math.E, x/eps)-1))
 		}
 	},
 }
