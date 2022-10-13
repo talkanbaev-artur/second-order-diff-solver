@@ -11,22 +11,18 @@ func ProblemFactoryMethod(problemName string, eps float64) model.ODE {
 	case "3":
 		{
 			return model.ODE{
-				A: func(eps float64) model.RF {
-					return func(f float64) float64 {
-						return 3*math.Pow(1+f, 2) - (2*eps)/(1+f)
-					}
-				}(eps),
+				A: func(f float64) float64 {
+					return 3*math.Pow(1+f, 2) - (2*eps)/(1+f)
+				},
 				B: func(f float64) float64 { return 0 },
-				F: func(eps float64) model.RF {
-					return func(f float64) float64 {
-						return (2 * eps / (2 * math.Pow(1+f, 2))) - (3 * (1 + f) / 2)
-					}
-				}(eps),
+				F: func(f float64) float64 {
+					return (1.5 * eps / (math.Pow(1+f, 2))) - (1.5 * (1 + f))
+				},
 				Xi1:  1,
 				Xi2:  1,
 				Eta1: 1.0 / 3.0,
 				Eta2: 0,
-				Phi1: func(f float64) float64 { return eps/6 - 1/math.Pow(math.E, -7/eps) },
+				Phi1: func(f float64) float64 { return eps/6 - 1/(1-math.Pow(math.E, -7/eps)) },
 				Phi2: func(f float64) float64 { return 1 - math.Ln2/2 },
 			}
 		}
