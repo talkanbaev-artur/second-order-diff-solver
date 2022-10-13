@@ -21,6 +21,7 @@ function createDataSet(xVals, yVals, label, color) {
 //supply an array of sets created by createDataSet function
 function LinePlot(datasets) {
     var options = {
+        animation: false,
         elements: {
             point: {
                 radius: 0
@@ -58,7 +59,6 @@ function LinePlot(datasets) {
     var data = {
         datasets: datasets
     }
-    console.log(data)
     return (
         <Line data={data} options={options}></Line>
     )
