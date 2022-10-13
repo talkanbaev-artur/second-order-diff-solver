@@ -68,6 +68,7 @@ function App() {
     if (!query) return setEps(0)
     var parsed = parseFloat(query)
     if (parsed > 1) parsed = 1;
+    if (parsed < 0) parsed = 0;
     setEps(parsed)
   }, 10)
 
@@ -80,46 +81,59 @@ function App() {
   }, [eps, task]);
 
   return (
-    <div className="flex px-4">
-      <div className="flex flex-col p-4">
-        <h2 className="text-lg">ODE solver</h2>
-        <div className="flex flex-col">
-          <div className="flex flex-col my-6">
-            <label className="text-gray-800-text-small mb-2">Grid size</label>
-            <input
-              type="number"
-              className="outline-none ring hover:shadow-xl ring-green-400 rounded-lg px-4 mx-auto"
-              value={n}
-              onInput={(e) => debounceN(e.target.value)}
-            />
+    <div className="flex">
+      <div className="flex mx-8 my-6 flex-1">
+        <div className="flex flex-col p-4">
+          <h2 className="text-3xl font-bold mb-2">ODE solver</h2>
+          <p>Made by Talkanbaev Artur</p>
+          <div className="mt-8">
+            <h3 className="font-bold text-lg mb-2">Manual</h3>
+            <p>1. Edit parameters - use the arrows or write the number down</p>
+            <p>2. Use mouse and wheel to navigate the graph</p>
+            <p>3. Hower over graphs to see values</p>
           </div>
-          <div className="flex flex-col my-6">
-            <label className="text-gray-800-text-small mb-2">Epsilon</label>
-            <input
-              type="number"
-              className="outline-none ring hover:shadow-xl ring-green-400 rounded-lg px-4 mx-auto"
-              value={eps}
-              onInput={(e) => debounceEps(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col my-6">
-            <label className="text-gray-800-text-small mb-2">Task</label>
-            <select className="outline-none ring ring-green-400 rounded-lg hover:shadow-xl bg-white py-1 px-2" value={task} onChange={(e) => { setTask(e.target.value) }}>
-              <option value="1">Task #1</option>
-              <option value="2">Task #2</option>
-              <option value="3">Task #3 </option>
-            </select>
-          </div>
-          <div className="flex flex-col my-6 space-y-4">
-            <p>Error for central scheme: {errors.central}</p>
-            <p>Error for directional scheme: {errors.dir}</p>
+          <h4 className="mt-4 text-lg font-bold">Parameters</h4>
+          <div className="flex flex-col">
+            <div className="flex flex-col my-2">
+              <label className="text-gray-800-text-small mb-2">Grid size</label>
+              <input
+                type="number"
+                className="outline-none ring hover:shadow-xl mr-auto ring-green-400 rounded-lg px-4"
+                value={n}
+                onInput={(e) => debounceN(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col my-4">
+              <label className="text-gray-800-text-small mb-2">Epsilon</label>
+              <input
+                type="number"
+                className="outline-none ring hover:shadow-xl ring-green-400 rounded-lg px-4 mr-auto"
+                value={eps}
+                step=".01"
+                onInput={(e) => debounceEps(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col my-4">
+              <label className="text-gray-800-text-small mb-2">Task</label>
+              <select className="outline-none ring ring-green-400 mr-auto pr-10 rounded-lg hover:shadow-xl bg-white py-1 pl-2" value={task} onChange={(e) => { setTask(e.target.value) }}>
+                <option value="1">Task #1</option>
+                <option value="2">Task #2</option>
+                <option value="3">Task #3 </option>
+              </select>
+            </div>
+            <div className="flex flex-col my-6 space-y-4">
+              <h4 className="font-bold text-lg">Error values</h4>
+              <p>Error for central scheme: {errors.central}</p>
+              <p>Error for directional scheme: {errors.dir}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-1">
-        {LinePlot([backendData, numericalCentral, numericalDir])}
+        <div className="flex flex-1">
+          {LinePlot([backendData, numericalCentral, numericalDir])}
+        </div>
       </div>
     </div>
+
   );
 }
 
