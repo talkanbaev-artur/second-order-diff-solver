@@ -46,8 +46,19 @@ func (s *solver) Precalc() error {
 	n, h, eps := s.Inputs.GridSize+1, 1.0/float64(s.Inputs.GridSize), s.Inputs.EpsilonParam
 	var a, b, c, f = make([]float64, n), make([]float64, n), make([]float64, n), make([]float64, n)
 	a[0], c[n-1] = 0, 0
-	b[0], c[0], f[0] = s.Original.Xi1+s.Original.Eta1*eps/h, s.Original.Eta1*eps/h, s.Original.Phi1(eps)
-	a[n-1], b[n-1], f[n-1] = s.Original.Eta2*eps/h, s.Original.Xi2+s.Original.Eta2*eps/h, s.Original.Phi2(eps)
+	{
+		a_1, b_1 := s.Original.A(mesh[0]), s.Original.B(mesh[0])
+		a_n, b_n := s.Original.A(mesh[n-1]), s.Original.B(mesh[n-1])
+		rVal_1, rVal_n := a_1*h/(2*eps), a_n*h/(2*eps)
+		mu_1, mu_n := (visc(rVal_1)-1)/rVal_1, (visc(rVal_n)-1)/rVal_n
+		b[0] = s.Original.Xi1 + b_1*h*(1+mu_1)/2 + s.Original.Eta1*eps/h*(visc(rVal_1)+rVal_1)
+		c[0] = -s.Original.Eta1 * eps / h * (visc(rVal_1) + rVal_1)
+		f[0] = s.Original.Phi1(eps) - s.Original.Eta1*s.Original.F(mesh[0])*h*(1+mu_1)/2
+		a[n-1] = s.Original.Xi2 + b_n*h*(1-mu_n)/2 - s.Original.Eta2*eps/h*(visc(rVal_n)-rVal_n)
+		b[n-1] = s.Original.Eta2 * eps / h * (visc(rVal_n) - rVal_n)
+		f[n-1] = s.Original.Phi2(eps) - s.Original.Eta2*s.Original.F(mesh[n-1])*h*(1-mu_n)/2
+	}
+	a[n-1], b[n-1], f[n-1] = -s.Original.Eta2*eps/h, s.Original.Xi2+s.Original.Eta2*eps/h, s.Original.Phi2(eps)
 	for i := 1; i < n-1; i++ {
 		f[i] = s.Original.F(mesh[i])
 		a_o, b_o := s.Original.A(mesh[i]), s.Original.B(mesh[i])
