@@ -4,7 +4,11 @@ import axios from "axios"
 
 
 const getTypes = () => {
-    return axios.get(apiEndpoint+"/numericals")
+    return axios.get(apiEndpoint + "/numericals")
 }
 
-export default {getTypes}
+const getAnalytical = (task, eps) => {
+    return axios.post(apiEndpoint + "/analytical", { task, eps })
+}
+
+export default { getTypes, getAnalytical }
