@@ -1,5 +1,5 @@
 NAME=talkanbaev-ode-solver
-VERSION=1.0.0
+VERSION=1.1.0
 
 TARGET_OS=linux windows darwin
 TARGET_ARCH=amd64 arm64 386 arm

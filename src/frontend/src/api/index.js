@@ -1,4 +1,4 @@
-const apiEndpoint = "http://localhost:8000" //leave empty for prod
+const apiEndpoint = "/api" //leave empty for prod
 
 import axios from "axios"
 

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -26,7 +27,10 @@ func main() {
 	s := logic.NewAPIService()
 
 	r := mux.NewRouter()
-	server.MakeMuxRoutes(s, r, lg)
+	server.MakeMuxRoutes(s, r.PathPrefix("/api").Subrouter(), lg)
+	path, _ := os.Getwd()
+	path = filepath.Join(path, "frontend")
+	server.AttachSPA(r, path, "index.html")
 	go func() {
 		c := cors.New(cors.Options{AllowedOrigins: []string{"*"}, AllowedMethods: []string{"POST", "GET", "OPTIONS"}})
 		srv := http.Server{

@@ -3,7 +3,10 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	kitlog "github.com/go-kit/kit/log/logrus"
 	"github.com/go-kit/kit/transport"
@@ -78,4 +81,36 @@ func decodeGetNumericalSolutionReqeust(_ context.Context, r *http.Request) (any,
 	var req endpoints.GetNumericalSolutionRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	return req, err
+}
+
+func AttachSPA(r *mux.Router, base string, index string) {
+	h := spaHandler{base: base, index: index}
+	r.PathPrefix("/").Handler(h)
+}
+
+type spaHandler struct {
+	base  string
+	index string
+}
+
+func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	path, err := filepath.Abs(r.URL.Path)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	path = filepath.Join(h.base, path)
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		http.ServeFile(w, r, filepath.Join(h.base, h.index))
+		return
+	} else if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.FileServer(http.Dir(h.base)).ServeHTTP(w, r)
 }
