@@ -14,6 +14,11 @@ function App() {
     createDataSet([], [], "Numerical-directional difference scheme", "blue")
   );
 
+  const [errors, setErrors] = useState({
+    central: 0,
+    dir: 0
+  });
+
   const [n, setN] = useState(9.0);
   const [eps, setEps] = useState(1);
   const [task, setTask] = useState("3");
@@ -27,6 +32,7 @@ function App() {
     if (centralData.status == 200 && dirData.status == 200) {
       setNumericalCentral(createDataSet(centralData.data.xVals, centralData.data.yVals, "Numerical-central difference scheme", "green"));
       setNumericalDir(createDataSet(dirData.data.xVals, dirData.data.yVals, "Numerical-directional difference scheme", "blue"));
+      setErrors({ central: centralData.data.err, dir: dirData.data.err })
     }
   };
 
@@ -103,6 +109,10 @@ function App() {
               <option value="2">Task #2</option>
               <option value="3">Task #3 </option>
             </select>
+          </div>
+          <div className="flex flex-col my-6 space-y-4">
+            <p>Error for central scheme: {errors.central}</p>
+            <p>Error for directional scheme: {errors.dir}</p>
           </div>
         </div>
       </div>
