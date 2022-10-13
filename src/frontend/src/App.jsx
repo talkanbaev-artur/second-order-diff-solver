@@ -19,9 +19,9 @@ function App() {
     dir: 0
   });
 
-  const [n, setN] = useState(9.0);
-  const [eps, setEps] = useState(1);
-  const [task, setTask] = useState("3");
+  const [n, setN] = useState(32.0);
+  const [eps, setEps] = useState(0.03);
+  const [task, setTask] = useState("1");
 
   const setLines = async () => {
     var vals = { n, eps, task };
