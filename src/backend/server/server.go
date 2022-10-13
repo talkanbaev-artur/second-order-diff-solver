@@ -48,6 +48,15 @@ func MakeMuxRoutes(s logic.APIService, r *mux.Router, lg *logrus.Logger) {
 			options...,
 		),
 	)
+
+	r.Methods("POST").Path("/solve").Handler(
+		transp.NewServer(
+			ends.GetNumericalSolution,
+			decodeGetNumericalSolutionReqeust,
+			encodeResponse,
+			options...,
+		),
+	)
 }
 
 func decodeGetNumericalsRequest(_ context.Context, r *http.Request) (interface{}, error) {
@@ -63,4 +72,10 @@ func decodeGetAnalyticalSolutionReqeust(_ context.Context, r *http.Request) (any
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(response)
+}
+
+func decodeGetNumericalSolutionReqeust(_ context.Context, r *http.Request) (any, error) {
+	var req endpoints.GetNumericalSolutionRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	return req, err
 }
