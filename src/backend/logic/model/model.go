@@ -16,6 +16,7 @@ type Boundary2ndODEInputs struct {
 	GridSize         int     `json:"n"`
 	EpsilonParam     float64 `json:"e"`
 	DifferenceScheme string  `json:"diff_scheme"`
+	TaskName         string  `json:"task"`
 }
 
 type SolutionData struct {
