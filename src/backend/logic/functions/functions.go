@@ -6,8 +6,33 @@ import (
 	"github.com/talkanbaev-artur/auca-numericals-template/src/backend/logic/model"
 )
 
-func ProblemFactoryMethod(problemName string) model.ODE {
-	return model.ODE{}
+func ProblemFactoryMethod(problemName string, eps float64) model.ODE {
+	switch problemName {
+	case "3":
+		{
+			return model.ODE{
+				A: func(eps float64) model.RF {
+					return func(f float64) float64 {
+						return 3*math.Pow(1+f, 2) - (2*eps)/(1+f)
+					}
+				}(eps),
+				B: func(f float64) float64 { return 0 },
+				F: func(eps float64) model.RF {
+					return func(f float64) float64 {
+						return (2 * eps / (2 * math.Pow(1+f, 2))) - (3 * (1 + f) / 2)
+					}
+				}(eps),
+				Xi1:  1,
+				Xi2:  1,
+				Eta1: 1.0 / 3.0,
+				Eta2: 0,
+				Phi1: func(f float64) float64 { return eps/6 - 1/math.Pow(math.E, -7/eps) },
+				Phi2: func(f float64) float64 { return 1 - math.Ln2/2 },
+			}
+		}
+	default:
+		panic("method not found")
+	}
 }
 
 var problemSolutions = map[string]model.EPSRF{
@@ -35,4 +60,13 @@ func Evaluate(problemName string, eps float64) model.SolutionData {
 		sol.YValues = append(sol.YValues, f(sol.XValues[i]))
 	}
 	return sol
+}
+
+func GetUniformGrid(n int) []float64 {
+	h := 1.0 / float64(n)
+	var x []float64
+	for i := 0; i <= n; i++ {
+		x = append(x, h*float64(i))
+	}
+	return x
 }
