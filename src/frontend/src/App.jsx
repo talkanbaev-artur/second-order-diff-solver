@@ -6,13 +6,15 @@ import { LinePlot, createDataSet } from "./components/chart";
 function App() {
 
   const [backendData, setBackendData] = useState(createDataSet([], [], "original", "red"));
+  const [numerical, setNumerical] = useState(createDataSet([], [], "numerical", "green"));
 
   useEffect(() => {
     const func = async () => {
-      var data = await api.getAnalytical("3", 0.5);
-      if (data.status == 200) {
-        var original = createDataSet(data.data.xVals, data.data.yVals, "original", "rgb(255,10,10)")
-        setBackendData(original);
+      var data = await api.getAnalytical("3", 1);
+      var dataNum = await api.getNumerical("3", 1, 1024, "central")
+      if (data.status == 200 && dataNum.status == 200) {
+        setBackendData(createDataSet(data.data.xVals, data.data.yVals, "original", "red"));
+        setNumerical(createDataSet(dataNum.data.xVals, dataNum.data.yVals, "numerical", "green"))
       };
     }
     func()
@@ -22,7 +24,7 @@ function App() {
   return (
     <div className="">
       <div className="">
-        {LinePlot([backendData])}
+        {LinePlot([backendData, numerical])}
       </div>
     </div>
   )

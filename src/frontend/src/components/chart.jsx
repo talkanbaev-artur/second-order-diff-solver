@@ -35,7 +35,9 @@ function LinePlot(datasets) {
                 type: 'linear'
             },
             y: {
-                type: 'linear'
+                type: 'linear',
+                min: 0,
+                max: 1
             }
         },
         plugins: {

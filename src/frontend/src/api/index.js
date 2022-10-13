@@ -11,4 +11,8 @@ const getAnalytical = (task, eps) => {
     return axios.post(apiEndpoint + "/analytical", { task, eps })
 }
 
-export default { getTypes, getAnalytical }
+const getNumerical = (task, eps, n, scheme) => {
+    return axios.post(apiEndpoint + "/solve", { task, eps, n, scheme })
+}
+
+export default { getTypes, getAnalytical, getNumerical }
