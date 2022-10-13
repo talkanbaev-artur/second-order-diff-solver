@@ -58,6 +58,19 @@ func Evaluate(problemName string, eps float64) model.SolutionData {
 	return sol
 }
 
+func EvaluateOnGrid(problemName string, eps float64, grid []float64) []float64 {
+	factory, ok := problemSolutions[problemName]
+	if !ok {
+		panic("method not found")
+	}
+	f := factory(eps)
+	var sol []float64
+	for i := 0; i < len(grid); i++ {
+		sol = append(sol, f(grid[i]))
+	}
+	return sol
+}
+
 func GetUniformGrid(n int) []float64 {
 	h := 1.0 / float64(n)
 	var x []float64

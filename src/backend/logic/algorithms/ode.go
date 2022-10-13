@@ -67,5 +67,15 @@ func (s *solver) Solve() model.NumericalSolution {
 	if err != nil {
 		panic(err)
 	}
-	return model.NumericalSolution{SolutionData: model.SolutionData{XValues: mesh, YValues: vals}}
+	reals := functions.EvaluateOnGrid(s.Inputs.TaskName, s.Inputs.EpsilonParam, mesh)
+	maxVal, maxDiff := 0.0, 0.0
+	for i, val := range vals {
+		if math.Abs(val) > maxVal {
+			maxVal = val
+		}
+		if diff := math.Abs(val - reals[i]); diff > maxDiff {
+			maxDiff = diff
+		}
+	}
+	return model.NumericalSolution{SolutionData: model.SolutionData{XValues: mesh, YValues: vals}, Error: maxDiff / maxVal * 100}
 }
