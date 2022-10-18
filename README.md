@@ -1,6 +1,5 @@
-# AUCA Numerical computation software template
+# AUCA Numerical computation software for solving 2nd-order ODEs BVP
 
-The template might be used to create web applications for performing and graphing various computations. 
 
 ### Dev commands
 
